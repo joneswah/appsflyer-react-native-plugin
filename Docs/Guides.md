@@ -222,7 +222,7 @@ import React, {useEffect, useState} from 'react';
 import {AppState, SafeAreaView, Text, View} from 'react-native';
 import appsFlyer from 'react-native-appsflyer';
 
-const onInstallConversionDataCanceller = appsFlyer.onInstallConversionData(
+let onInstallConversionDataCanceller: (() => void) | null = appsFlyer.onInstallConversionData(
     (res) => {
         const isFirstLaunch = res?.data?.is_first_launch;
 
@@ -232,7 +232,7 @@ const onInstallConversionDataCanceller = appsFlyer.onInstallConversionData(
                 const campaign = res.data.campaign;
                 console.log('This is first launch and a Non-Organic install. Media source: ' + media_source + ' Campaign: ' + campaign);
             } else if (res.data.af_status === 'Organic') {
-                console.log('This is first launch and a Organic Install');
+                console.log('This is first launch and an Organic Install');
             }
         } else {
             console.log('This is not first launch');
@@ -240,7 +240,7 @@ const onInstallConversionDataCanceller = appsFlyer.onInstallConversionData(
     },
 );
 
-const onAppOpenAttributionCanceller = appsFlyer.onAppOpenAttribution((res) => {
+let onAppOpenAttributionCanceller: (() => void) | null = appsFlyer.onAppOpenAttribution((res) => {
     console.log(res);
 });
 
@@ -311,7 +311,7 @@ If using react-native-appsflyer plugin version <= 6.1.30
 
 #### Universal Links (iOS 9 +)
 ```objectivec
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
+- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
     // version >= 6.2.10
     [[AppsFlyerAttribution shared] continueUserActivity:userActivity restorationHandler:restorationHandler];
     
@@ -381,7 +381,7 @@ AppsFlyer enables you to measure app uninstalls. To handle notifications it requ
 
 ...
 
-- (void)application:(UIApplication ​*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *​)deviceToken {
+- (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken {
 // notify AppsFlyerLib
  [[AppsFlyerLib shared] registerUninstall:deviceToken];
 }
